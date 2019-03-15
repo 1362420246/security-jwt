@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qbk.mapper.UserMapper">
+
+
+    <resultMap id="UserMap" type="SysUser" >
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <collection property="roles" ofType="SysRole">
+            <id column="role_id" property="id" />
+            <result column="name" property="name" />
+        </collection>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="UserMap" >
+        SELECT a.id,a.username,a.`password` ,c.id  AS role_id ,c.name
+        FROM sys_user a , sys_user_role b , sys_role c
+        WHERE a.id = b.user_id
+        AND b.role_id = c.id
+        AND a.username = #{username}
+    </select>
+
+    <insert id="insert" parameterType="SysUser">
+        INSERT INTO sys_user
+        (username,`password`)
+        VALUES
+        (#{username},#{password})
+    </insert>
+
+
+
+</mapper>
